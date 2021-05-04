@@ -1,11 +1,13 @@
 package fr.moveit.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Data
 @Entity
@@ -13,6 +15,10 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Role> roles;
 
 	@Column(unique=true)
 	private String username;
