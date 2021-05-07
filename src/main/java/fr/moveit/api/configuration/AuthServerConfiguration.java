@@ -1,4 +1,4 @@
-package fr.moveit.api.conf;
+package fr.moveit.api.configuration;
 
 import fr.moveit.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

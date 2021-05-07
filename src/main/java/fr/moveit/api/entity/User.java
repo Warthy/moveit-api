@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -22,6 +23,12 @@ public class User implements UserDetails {
 
 	@Column(unique=true)
 	private String username;
+
+	private LocalDateTime deletedAt;
+
+	private String firstName;
+
+	private String lastName;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

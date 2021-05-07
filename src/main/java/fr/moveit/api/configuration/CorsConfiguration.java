@@ -1,4 +1,4 @@
-package fr.moveit.api.conf;
+package fr.moveit.api.configuration;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

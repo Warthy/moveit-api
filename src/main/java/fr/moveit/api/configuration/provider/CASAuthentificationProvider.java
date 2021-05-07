@@ -1,5 +1,6 @@
-package fr.moveit.api.conf;
+package fr.moveit.api.configuration.provider;
 
+import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.CASAuthentificationDTO;
 import fr.moveit.api.dto.CASUserDTO;
 import fr.moveit.api.utils.JsonUtils;

@@ -1,4 +1,4 @@
-package fr.moveit.api.conf;
+package fr.moveit.api.configuration;
 
 public interface Roles {
 	String ADMIN = "ROLE_ADMIN";
