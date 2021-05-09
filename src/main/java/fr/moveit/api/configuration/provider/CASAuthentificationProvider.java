@@ -3,6 +3,9 @@ package fr.moveit.api.configuration.provider;
 import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.CASAuthentificationDTO;
 import fr.moveit.api.dto.CASUserDTO;
+import fr.moveit.api.entity.User;
+import fr.moveit.api.repository.RoleRepository;
+import fr.moveit.api.repository.UserRepository;
 import fr.moveit.api.utils.JsonUtils;
 import fr.moveit.api.utils.exception.CASServiceException;
 import org.slf4j.Logger;
@@ -27,16 +30,25 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PostConstruct;
 import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Component
 public class CASAuthentificationProvider implements AuthenticationProvider {
 
-	@Autowired
-	JsonUtils jsonUtils;
+	final JsonUtils jsonUtils;
+
+	final UserRepository repository;
+	final RoleRepository roleRepository;
 
 	private WebClient client;
 	private final Logger LOG = LoggerFactory.getLogger(CASAuthentificationProvider.class);
 	private final String ISEP_CAS_URL = "https://sso-portal.isep.fr";
+
+	public CASAuthentificationProvider(JsonUtils jsonUtils, UserRepository repository, RoleRepository roleRepository) {
+		this.jsonUtils = jsonUtils;
+		this.repository = repository;
+		this.roleRepository = roleRepository;
+	}
 
 	@PostConstruct
 	public void initializeCASClient() {
@@ -55,9 +67,24 @@ public class CASAuthentificationProvider implements AuthenticationProvider {
 
 			authorities.add(new SimpleGrantedAuthority(Roles.USER));
 
-			CASUserDTO user = identifyToCAS(username, password);
+			CASUserDTO CASUser = identifyToCAS(username, password);
 
-			return new UsernamePasswordAuthenticationToken(user, password, authorities);
+			// If user is connecting for the first time,
+			// then we create an account for the user in the db
+			if(!repository.existsById(CASUser.getNumero())){
+				User user = new User();
+				user.setId(CASUser.getNumero());   // User's id is ISEP unique identification number
+
+				user.setEmail(CASUser.getMail());
+				user.setFirstName(CASUser.getPrenom());
+				user.setLastName(CASUser.getNom());
+
+				user.setRoles(Collections.singleton(roleRepository.findByRole(Roles.USER)));
+
+				repository.save(user);
+			}
+
+			return new UsernamePasswordAuthenticationToken(CASUser, password, authorities);
 		}catch (Exception e){
 			throw new BadCredentialsException("Echec de l'authentification");
 		}
