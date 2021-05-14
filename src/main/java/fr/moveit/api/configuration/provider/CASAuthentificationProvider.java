@@ -10,7 +10,6 @@ import fr.moveit.api.utils.JsonUtils;
 import fr.moveit.api.utils.exception.CASServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -84,7 +83,7 @@ public class CASAuthentificationProvider implements AuthenticationProvider {
 				repository.save(user);
 			}
 
-			return new UsernamePasswordAuthenticationToken(CASUser, password, authorities);
+			return new UsernamePasswordAuthenticationToken(CASUser.getNumero(), password, authorities);
 		}catch (Exception e){
 			throw new BadCredentialsException("Echec de l'authentification");
 		}
@@ -92,7 +91,7 @@ public class CASAuthentificationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
 
 

@@ -11,10 +11,10 @@ import java.util.Collection;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "users")
 public class User implements UserDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true)
 	private Long id;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
