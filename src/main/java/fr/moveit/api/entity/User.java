@@ -21,10 +21,12 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Role> roles;
 
-	@Column(unique=true)
+	@Column(unique = true, nullable = false)
 	private String username;
 
-	@Column(unique=true)
+	private String password;
+
+	@Column(unique = true, nullable = false)
 	private String email;
 
 	private LocalDateTime deletedAt;
@@ -35,17 +37,17 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return roles;
 	}
 
 	@Override
 	public String getPassword() {
-		return null;
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		return null;
+		return username;
 	}
 
 	@Override

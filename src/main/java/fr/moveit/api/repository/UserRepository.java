@@ -13,4 +13,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsernameAndDeletedAtIsNull(String string);
 
 	List<User> findAllByDeletedAtIsNull();
+
+	Boolean existsByUsername(String username);
 }

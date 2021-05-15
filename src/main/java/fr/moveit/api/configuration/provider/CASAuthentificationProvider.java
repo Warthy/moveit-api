@@ -34,10 +34,10 @@ import java.util.Collections;
 @Component
 public class CASAuthentificationProvider implements AuthenticationProvider {
 
-	final JsonUtils jsonUtils;
+	final private JsonUtils jsonUtils;
 
-	final UserRepository repository;
-	final RoleRepository roleRepository;
+	final private UserRepository repository;
+	final private RoleRepository roleRepository;
 
 	private WebClient client;
 	private final Logger LOG = LoggerFactory.getLogger(CASAuthentificationProvider.class);
@@ -67,22 +67,6 @@ public class CASAuthentificationProvider implements AuthenticationProvider {
 			authorities.add(new SimpleGrantedAuthority(Roles.USER));
 
 			CASUserDTO CASUser = identifyToCAS(username, password);
-
-			// If user is connecting for the first time,
-			// then we create an account for the user in the db
-			if(!repository.existsById(CASUser.getNumero())){
-				User user = new User();
-				user.setId(CASUser.getNumero());   // User's id is ISEP unique identification number
-
-				user.setEmail(CASUser.getMail());
-				user.setFirstName(CASUser.getPrenom());
-				user.setLastName(CASUser.getNom());
-
-				user.setRoles(Collections.singleton(roleRepository.findByRole(Roles.USER)));
-
-				repository.save(user);
-			}
-
 			return new UsernamePasswordAuthenticationToken(CASUser.getNumero(), password, authorities);
 		}catch (Exception e){
 			throw new BadCredentialsException("Echec de l'authentification");
