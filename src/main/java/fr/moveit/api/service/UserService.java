@@ -5,7 +5,6 @@ import fr.moveit.api.dto.UserCreationDTO;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.repository.RoleRepository;
 import fr.moveit.api.repository.UserRepository;
-import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,7 +29,7 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public User loadUserByUsername(String s) throws UsernameNotFoundException {
-		return repository.findByUsernameAndDeletedAtIsNull(s).orElseThrow(RuntimeException::new);
+		return repository.findByUsernameAndDeletedAtIsNull(s).orElseThrow();
 	}
 
 

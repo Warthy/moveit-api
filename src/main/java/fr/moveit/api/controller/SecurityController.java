@@ -4,27 +4,27 @@ import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.AuthentificationDTO;
 import fr.moveit.api.dto.UserCreationDTO;
 import fr.moveit.api.entity.User;
-import fr.moveit.api.repository.UserRepository;
+import fr.moveit.api.security.jwt.JWTPayload;
 import fr.moveit.api.security.jwt.JWTProvider;
 import fr.moveit.api.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
-@RestController("/s")
+@RestController
+@RequestMapping("/s")
 @RequiredArgsConstructor
 public class SecurityController {
+
+	private final Logger log = LoggerFactory.getLogger(SecurityController.class);
 
 	final private AuthenticationManager authenticationManager;
 
@@ -32,13 +32,13 @@ public class SecurityController {
 
 	final private JWTProvider tokenProvider;
 
-	@PostMapping("/auth")
-	public String login(@RequestBody AuthentificationDTO credentials){
+	@PostMapping("/login")
+	public JWTPayload login(@RequestBody AuthentificationDTO credentials){
 		String username = credentials.getUsername();
 		String password = credentials.getPassword();
 
 		try {
-			return tokenProvider.createToken(
+			 String token = tokenProvider.createToken(
 					authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 							username,
 							password,
@@ -46,17 +46,20 @@ public class SecurityController {
 					)),
 					credentials.getRememberMe()
 			);
-		} catch (AuthenticationException e) {
-			throw new BadCredentialsException("authentification failed");
+
+			 return new JWTPayload(token, "");
+		} catch (RuntimeException e) {
+			log.info(e.getMessage());
+			throw new BadCredentialsException(e.getMessage());
 		}
 	}
 
 
 	@PostMapping("/register")
-	public String register(@RequestBody UserCreationDTO dto){
+	public JWTPayload register(@RequestBody UserCreationDTO dto){
 		User createdUser = userService.createUser(dto);
 
-		return tokenProvider.createToken(
+		String token = tokenProvider.createToken(
 				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 						createdUser.getUsername(),
 						createdUser.getPassword(),
@@ -64,11 +67,13 @@ public class SecurityController {
 				)),
 				false
 		);
+
+		return new JWTPayload(token, "");
 	}
 
 	@GetMapping("/refresh")
-	public String refresh(HttpServletRequest req) {
-		return tokenProvider.createToken(
+	public JWTPayload refresh(HttpServletRequest req) {
+		String token = tokenProvider.createToken(
 				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 						req.getRemoteUser(),
 						"",
@@ -76,6 +81,8 @@ public class SecurityController {
 				)),
 				false
 		);
+
+		return new JWTPayload(token, "");
 	}
 
 

@@ -1,7 +1,7 @@
 package fr.moveit.api.configuration;
 
 
-import fr.moveit.api.security.jwt.JWTFilterConfigurer;
+import fr.moveit.api.security.jwt.JWTFilter;
 import fr.moveit.api.security.jwt.JWTProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,17 +13,15 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	final private UserDetailsService userService;
 	final private JWTProvider JWTProvider;
 
 	@Override
@@ -37,8 +35,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// Entry points
 		http.authorizeRequests()//
-				.antMatchers("/security/login").permitAll()
-				.antMatchers("/security/create").permitAll()
+				.antMatchers("/s/**").permitAll()
 				// Disallow everything else..
 				.anyRequest().authenticated();
 
@@ -46,7 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		//http.exceptionHandling().accessDeniedPage("/login");
 
 		// Apply JWT
-		http.apply(new JWTFilterConfigurer(JWTProvider));
+		http.addFilterBefore(new JWTFilter(JWTProvider), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override

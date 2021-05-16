@@ -8,13 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Data
 @Entity(name = "users")
 public class User implements UserDetails {
 	@Id
-	@Column(unique = true)
+	@GeneratedValue
 	private Long id;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -52,21 +53,21 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return deletedAt == null || deletedAt.isAfter(LocalDateTime.now());
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 }
