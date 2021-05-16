@@ -58,17 +58,21 @@ public class SecurityController {
 	@PostMapping("/register")
 	public JWTPayload register(@RequestBody UserCreationDTO dto){
 		User createdUser = userService.createUser(dto);
-
+		try {
 		String token = tokenProvider.createToken(
 				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-						createdUser.getUsername(),
-						createdUser.getPassword(),
+						dto.getUsername(),
+						dto.getPassword(),
 						Collections.singletonList(new SimpleGrantedAuthority(Roles.USER))
 				)),
 				false
 		);
 
 		return new JWTPayload(token, "");
+		} catch (RuntimeException e) {
+			log.info(e.getMessage());
+			throw new BadCredentialsException(e.getMessage());
+		}
 	}
 
 	@GetMapping("/refresh")
