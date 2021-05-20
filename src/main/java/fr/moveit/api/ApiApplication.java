@@ -37,18 +37,13 @@ public class ApiApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... params) throws Exception {
+	public void run(String... params) {
 		List<Role> roles = new ArrayList<>();
-		List<Role> savedRoles = StreamSupport
-				.stream(roleRepository.findAll().spliterator(), false)
-				.collect(Collectors.toList());
-
 		for (Field f : Roles.class.getFields()) {
 			try {
 				Role role = new Role((String) f.get(Roles.class));
-				if (!savedRoles.contains(role)) {
+				if (!roleRepository.existsByRole(role.getRole()))
 					roles.add(role);
-				}
 			} catch (Exception e) {
 				log.debug(e.getMessage());
 			}

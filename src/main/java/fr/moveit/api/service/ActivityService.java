@@ -1,11 +1,18 @@
 package fr.moveit.api.service;
 
+import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.ActivityCreationDTO;
 import fr.moveit.api.entity.Activity;
+import fr.moveit.api.entity.User;
+import fr.moveit.api.exceptions.NotFoundException;
+import fr.moveit.api.exceptions.UnauthorizedException;
 import fr.moveit.api.repository.ActivityRepository;
+import fr.moveit.api.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -13,22 +20,16 @@ import java.util.Optional;
 public class ActivityService {
 
 	private final UserService studentService;
+	private final ModelMapper mapper;
 	private final ActivityRepository repository;
 
 	public Activity createActivity(ActivityCreationDTO dto) {
-		Activity activity = new Activity();
+		Activity activity = mapper.map(dto, Activity.class);
 
-		activity.setName(dto.getName());
-		activity.setDescription(dto.getDescription());
-		activity.setLocation(dto.getLocation());
-		activity.setPrice(dto.getPrice());
+		activity.setCreatedAt(LocalDateTime.now());
+		activity.setAuthor(studentService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
 
-		activity.setStart(dto.getStart());
-		activity.setEnd(dto.getEnd());
-
-		dto.getParticipants().forEach(id -> {
-			activity.getParticipants().add(studentService.getUser(id));
-		});
+		dto.getParticipants().forEach(id -> activity.getParticipants().add(studentService.getUser(id)));
 
 		return repository.save(activity);
 	}
@@ -37,16 +38,19 @@ public class ActivityService {
 		Optional<Activity> activity = repository.findById(id);
 
 		if (activity.isEmpty())
-			throw new IllegalArgumentException("activity not found");
+			throw new NotFoundException("activity not found");
 		return activity.get();
 	}
 
 
-	public void deleteActivity(Long id){
+	public void deleteActivity(Long id) {
 		Activity activity = getActivity(id);
 
-		//TODO: check permissions
+		User current = studentService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername());
+		if (activity.getAuthor().equals(current) || SecurityUtils.hasCurrentUserThisAuthority(Roles.ADMIN)) {
+			repository.delete(activity);
+		}
 
-		repository.delete(activity);
+		throw new UnauthorizedException("permission insuffisantes");
 	}
 }

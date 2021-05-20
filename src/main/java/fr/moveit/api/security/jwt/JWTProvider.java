@@ -27,8 +27,6 @@ public class JWTProvider {
 
 	private final Logger log = LoggerFactory.getLogger(JWTProvider.class);
 
-	final private UserRepository repository;
-
 	@Value("${security.jwt.base64-secret}")
 	private String secretKey;
 
@@ -77,7 +75,7 @@ public class JWTProvider {
 
 		User principal = new User(claims.getSubject(), "", authorities);
 
-		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 
 

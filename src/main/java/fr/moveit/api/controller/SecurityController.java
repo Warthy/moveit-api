@@ -33,12 +33,12 @@ public class SecurityController {
 	final private JWTProvider tokenProvider;
 
 	@PostMapping("/login")
-	public JWTPayload login(@RequestBody AuthentificationDTO credentials){
+	public JWTPayload login(@RequestBody AuthentificationDTO credentials) {
 		String username = credentials.getUsername();
 		String password = credentials.getPassword();
 
 		try {
-			 String token = tokenProvider.createToken(
+			String token = tokenProvider.createToken(
 					authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 							username,
 							password,
@@ -47,7 +47,7 @@ public class SecurityController {
 					credentials.getRememberMe()
 			);
 
-			 return new JWTPayload(token, "");
+			return new JWTPayload(token, "");
 		} catch (RuntimeException e) {
 			log.info(e.getMessage());
 			throw new BadCredentialsException(e.getMessage());
@@ -56,19 +56,19 @@ public class SecurityController {
 
 
 	@PostMapping("/register")
-	public JWTPayload register(@RequestBody UserCreationDTO dto){
-		User createdUser = userService.createUser(dto);
+	public JWTPayload register(@RequestBody UserCreationDTO dto) {
+		userService.createUser(dto);
 		try {
-		String token = tokenProvider.createToken(
-				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-						dto.getUsername(),
-						dto.getPassword(),
-						Collections.singletonList(new SimpleGrantedAuthority(Roles.USER))
-				)),
-				false
-		);
+			String token = tokenProvider.createToken(
+					authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+							dto.getUsername(),
+							dto.getPassword(),
+							Collections.singletonList(new SimpleGrantedAuthority(Roles.USER))
+					)),
+					false
+			);
 
-		return new JWTPayload(token, "");
+			return new JWTPayload(token, "");
 		} catch (RuntimeException e) {
 			log.info(e.getMessage());
 			throw new BadCredentialsException(e.getMessage());
