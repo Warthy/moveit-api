@@ -35,6 +35,13 @@ public class User implements UserDetails {
 
 	private String lastName;
 
+	@OneToMany(mappedBy = "owner")
+	private Collection<Planning> plannings;
+
+	@ManyToMany
+	private Collection<User> friends;
+
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
@@ -69,4 +76,5 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
 }

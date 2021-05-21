@@ -2,8 +2,12 @@ package fr.moveit.api.service;
 
 import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.ActivityCreationDTO;
+import fr.moveit.api.dto.ActivityEditionDTO;
 import fr.moveit.api.entity.Activity;
+import fr.moveit.api.entity.ActivityVisibility;
 import fr.moveit.api.entity.User;
+import fr.moveit.api.exceptions.BadRequestException;
+import fr.moveit.api.exceptions.ForbiddenException;
 import fr.moveit.api.exceptions.NotFoundException;
 import fr.moveit.api.exceptions.UnauthorizedException;
 import fr.moveit.api.repository.ActivityRepository;
@@ -13,23 +17,35 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ActivityService {
 
-	private final UserService studentService;
+	private final UserService userService;
 	private final ModelMapper mapper;
 	private final ActivityRepository repository;
+
+	private Activity getActivityIfHasPermissions(Long id) {
+		Activity activity = getActivity(id);
+		User current = userService.getCurrentUser();
+
+		if (!activity.getAuthor().equals(current) || !SecurityUtils.hasCurrentUserThisAuthority(Roles.ADMIN))
+			throw new UnauthorizedException("permissions insuffisantes");
+
+		return activity;
+	}
+
 
 	public Activity createActivity(ActivityCreationDTO dto) {
 		Activity activity = mapper.map(dto, Activity.class);
 
 		activity.setCreatedAt(LocalDateTime.now());
-		activity.setAuthor(studentService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
+		activity.setAuthor(userService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
 
-		dto.getParticipants().forEach(id -> activity.getParticipants().add(studentService.getUser(id)));
+		dto.getParticipants().forEach(id -> activity.getParticipants().add(userService.getUser(id)));
 
 		return repository.save(activity);
 	}
@@ -43,14 +59,59 @@ public class ActivityService {
 	}
 
 
-	public void deleteActivity(Long id) {
-		Activity activity = getActivity(id);
+	public Activity updateActivity(Long id, ActivityEditionDTO dto) {
+		Activity activity = getActivityIfHasPermissions(id);
+		mapper.map(dto, activity);
 
-		User current = studentService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername());
-		if (activity.getAuthor().equals(current) || SecurityUtils.hasCurrentUserThisAuthority(Roles.ADMIN)) {
-			repository.delete(activity);
-		}
-
-		throw new UnauthorizedException("permission insuffisantes");
+		return repository.save(activity);
 	}
+
+
+	public void deleteActivity(Long id) {
+		Activity activity = getActivityIfHasPermissions(id);
+
+		repository.delete(activity);
+	}
+
+	public Activity joinActivity(Long id) {
+		Activity activity = getActivity(id);
+		User user = userService.getCurrentUser();
+
+		if (
+			(activity.getVisibility() == ActivityVisibility.PRIVATE) ||
+		    (activity.getVisibility() == ActivityVisibility.INTERN && !activity.getAuthor().getFriends().contains(user))
+		) throw new ForbiddenException("you can't join this activity");
+
+		if (activity.getParticipants().contains(user))
+			throw new BadRequestException("You are already member of this activity");
+
+
+		activity.getParticipants().add(user);
+		return repository.save(activity);
+	}
+
+	public Activity addParticipants(Long id, List<Long> ids) {
+		Activity activity = getActivityIfHasPermissions(id);
+		if (activity.getVisibility() != ActivityVisibility.PRIVATE)
+			throw new BadRequestException("you can only add participants to an activity that is set as private");
+
+		ids.forEach(userId ->
+				activity.getParticipants().add(userService.getUser(id))
+		);
+
+		return repository.save(activity);
+	}
+
+	public Activity removeParticipants(Long id, List<Long> ids) {
+		Activity activity = getActivityIfHasPermissions(id);
+		if (activity.getVisibility() != ActivityVisibility.PRIVATE)
+			throw new BadRequestException("you can only remove participants to an activity that is set as private");
+
+		ids.forEach(userId ->
+				activity.getParticipants().remove(userService.getUser(id))
+		);
+
+		return repository.save(activity);
+	}
+
 }

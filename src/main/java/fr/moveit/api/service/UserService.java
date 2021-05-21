@@ -5,6 +5,7 @@ import fr.moveit.api.dto.UserCreationDTO;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.repository.RoleRepository;
 import fr.moveit.api.repository.UserRepository;
+import fr.moveit.api.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,6 +33,9 @@ public class UserService implements UserDetailsService {
 		return repository.findByUsernameAndDeletedAtIsNull(s).orElseThrow();
 	}
 
+	public User getCurrentUser(){
+		return loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername());
+	}
 
 	public User getUser(Long id) {
 		Optional<User> user = repository.findById(id);
