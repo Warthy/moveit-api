@@ -1,6 +1,7 @@
 package fr.moveit.api.service;
 
 import fr.moveit.api.dto.PlanningDTO;
+import fr.moveit.api.dto.PlanningIntersectionDTO;
 import fr.moveit.api.entity.Planning;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.exceptions.ForbiddenException;
@@ -51,4 +52,14 @@ public class PlanningService {
 
 		repository.delete(planning);
 	}
+
+	public String intersection(PlanningIntersectionDTO dto){
+		User user1 = userService.getCurrentUser();
+		User user2 = userService.getUser(dto.getUserId());
+
+		//TODO: intersection algorithm
+
+		return "";
+	}
+
 }

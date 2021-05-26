@@ -3,6 +3,7 @@ package fr.moveit.api.service;
 import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.UserCreationDTO;
 import fr.moveit.api.entity.User;
+import fr.moveit.api.exceptions.BadRequestException;
 import fr.moveit.api.repository.RoleRepository;
 import fr.moveit.api.repository.UserRepository;
 import fr.moveit.api.security.SecurityUtils;
@@ -56,5 +57,29 @@ public class UserService implements UserDetailsService {
 		} else {
 			throw new RuntimeException("Username is already in use");
 		}
+	}
+
+	public void addFriend(Long id){
+		User user = getCurrentUser();
+		User target = getUser(id);
+
+		if(user.getFriends().contains(target))
+			throw new BadRequestException("");
+
+		user.getFriends().add(target);
+
+		repository.save(user);
+	}
+
+	public void removeFriend(Long id){
+		User user = getCurrentUser();
+		User target = getUser(id);
+
+		if(!user.getFriends().contains(target))
+			throw new BadRequestException("");
+
+		user.getFriends().remove(target);
+
+		repository.save(user);
 	}
 }

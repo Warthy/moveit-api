@@ -1,6 +1,7 @@
 package fr.moveit.api.controller;
 
 import fr.moveit.api.dto.PlanningDTO;
+import fr.moveit.api.dto.PlanningIntersectionDTO;
 import fr.moveit.api.entity.Planning;
 import fr.moveit.api.service.PlanningService;
 import lombok.RequiredArgsConstructor;
@@ -12,19 +13,25 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @RequestMapping("/planning")
 public class PlanningController {
-	PlanningService service;
+	private final PlanningService planningService;
 
+	@GetMapping
 	public Collection<Planning> getPlannings(){
-		return service.getOwnPlanning();
+		return planningService.getOwnPlanning();
 	}
 
 	@PostMapping
 	public Planning add(@RequestBody PlanningDTO dto){
-		return service.addPlanning(dto);
+		return planningService.addPlanning(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public void remove(@PathVariable Long id){
-		service.removePlanning(id);
+		planningService.removePlanning(id);
+	}
+
+	@GetMapping("/intersection")
+	public String getIntersection(PlanningIntersectionDTO dto){
+		return planningService.intersection(dto);
 	}
 }
