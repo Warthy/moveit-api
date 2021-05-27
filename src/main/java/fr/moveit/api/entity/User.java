@@ -1,5 +1,6 @@
 package fr.moveit.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ public class User implements UserDetails {
 	@GeneratedValue
 	private Long id;
 
+	@JsonIgnore
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Role> roles;
@@ -24,11 +26,13 @@ public class User implements UserDetails {
 	@Column(unique = true, nullable = false)
 	private String username;
 
+	@JsonIgnore
 	private String password;
 
 	@Column(unique = true, nullable = false)
 	private String email;
 
+	@JsonIgnore
 	private LocalDateTime deletedAt;
 
 	private String firstName;
