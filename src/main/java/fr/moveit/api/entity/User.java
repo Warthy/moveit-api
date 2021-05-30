@@ -19,7 +19,6 @@ public class User implements UserDetails {
 	private Long id;
 
 	@JsonIgnore
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Role> roles;
 
@@ -40,13 +39,15 @@ public class User implements UserDetails {
 	private String lastName;
 
 	@OneToMany(mappedBy = "owner")
+	@JsonIgnore
 	private Collection<Planning> plannings;
 
 	@ManyToMany
+	@JsonIgnore
 	private Collection<User> friends;
 
-
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
 	}
@@ -62,21 +63,25 @@ public class User implements UserDetails {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonExpired() {
 		return deletedAt == null || deletedAt.isAfter(LocalDateTime.now());
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isEnabled() {
 		return true;
 	}
