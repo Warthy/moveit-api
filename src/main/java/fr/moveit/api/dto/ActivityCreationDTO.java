@@ -3,15 +3,15 @@ package fr.moveit.api.dto;
 import fr.moveit.api.entity.ActivityVisibility;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class ActivityCreationDTO {
 	private String name;
-	private LocalDateTime start;
-	private LocalDateTime end;
+	private Date start;
+	private Date end;
 
 	private ActivityVisibility visibility;
 
@@ -20,5 +20,5 @@ public class ActivityCreationDTO {
 	private String location;
 	private Float price;
 
-	private List<Long> participants = new ArrayList<>();
+	private Set<Long> participants = new HashSet<>();
 }

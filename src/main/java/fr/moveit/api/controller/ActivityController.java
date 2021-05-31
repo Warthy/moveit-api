@@ -17,7 +17,7 @@ public class ActivityController {
 	final ActivityService activityService;
 
 	@PostMapping
-	public Activity create(ActivityCreationDTO body) {
+	public Activity create(@RequestBody ActivityCreationDTO body) {
 		return activityService.createActivity(body);
 	}
 

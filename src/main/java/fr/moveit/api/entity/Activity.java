@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -18,7 +17,7 @@ public class Activity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private LocalDateTime createdAt;
+	private Date createdAt;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	private User author;
@@ -38,8 +37,8 @@ public class Activity {
 
 	private Float price;
 
-	private LocalDateTime start;
+	private Date start;
 
-	private LocalDateTime end;
+	private Date end;
 
 }

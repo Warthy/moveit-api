@@ -7,8 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -32,7 +32,7 @@ public class User implements UserDetails {
 	private String email;
 
 	@JsonIgnore
-	private LocalDateTime deletedAt;
+	private Date deletedAt;
 
 	private String firstName;
 
@@ -65,7 +65,7 @@ public class User implements UserDetails {
 	@Override
 	@JsonIgnore
 	public boolean isAccountNonExpired() {
-		return deletedAt == null || deletedAt.isAfter(LocalDateTime.now());
+		return deletedAt == null || deletedAt.after(new Date());
 	}
 
 	@Override
