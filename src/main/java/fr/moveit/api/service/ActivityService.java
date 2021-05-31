@@ -17,6 +17,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +44,7 @@ public class ActivityService {
 	public Activity createActivity(ActivityCreationDTO dto) {
 		Activity activity = mapper.map(dto, Activity.class);
 
+		activity.setParticipants(new HashSet<>());
 		activity.setCreatedAt(LocalDateTime.now());
 		activity.setAuthor(userService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
 
