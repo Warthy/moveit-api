@@ -31,7 +31,7 @@ public class PlanningController {
 	}
 
 	@GetMapping("/intersection")
-	public String getIntersection(PlanningIntersectionDTO dto){
+	public String getIntersection(@RequestBody PlanningIntersectionDTO dto){
 		return planningService.intersection(dto);
 	}
 }
