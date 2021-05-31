@@ -4,6 +4,7 @@ import fr.moveit.api.entity.ActivityVisibility;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,5 +20,5 @@ public class ActivityCreationDTO {
 	private String location;
 	private Float price;
 
-	private List<Long> participants;
+	private List<Long> participants = new ArrayList<>();
 }
