@@ -16,6 +16,11 @@ import java.util.List;
 public class ActivityController {
 	final ActivityService activityService;
 
+	@GetMapping
+	public Iterable<Activity> getAll(){
+		return activityService.getAllUserActivities();
+	}
+
 	@PostMapping
 	public Activity create(@RequestBody ActivityCreationDTO body) {
 		return activityService.createActivity(body);

@@ -29,6 +29,7 @@ public class ActivityService {
 	private final ModelMapper mapper;
 	private final ActivityRepository repository;
 
+
 	private Activity getActivityIfHasPermissions(Long id) {
 		Activity activity = getActivity(id);
 		User current = userService.getCurrentUser();
@@ -39,6 +40,9 @@ public class ActivityService {
 		return activity;
 	}
 
+	public Iterable<Activity> getAllUserActivities(){
+		return repository.findAllUserAccessibleActivity(userService.getCurrentUser());
+	}
 
 	public Activity createActivity(ActivityCreationDTO dto) {
 		Activity activity = mapper.map(dto, Activity.class);
