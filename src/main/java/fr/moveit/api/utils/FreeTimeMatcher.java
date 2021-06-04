@@ -9,21 +9,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlanningMatcher {
+public class FreeTimeMatcher {
 
 	private List<Iterator> timelines = new ArrayList<>();
 	private Integer timelines_finished = 0;
 
 	/**
+	 * Find all free time slots shared between all calendars in the given time slots, all free time slots
+	 * found should last for at list a given duration in ms
 	 *
-	 * @param start Date
-	 * @param end Date
- 	 * @param minimumDurationInMS Integer
+	 * @param start Date Starting date of possible shared free time slot
+	 * @param end Date Ending date of possible shared free time slot
+ 	 * @param minimumDurationInMS Integer Minimum duration of a shared free time slot
 	 * @param calendars List<Calendar>
 	 *
-	 * @return List<Date[]> List of all free time slot shared between all calendars in the time slots
+	 * @return List<Date[]>
 	 */
-	public List<Date[]> findIntersections(Date start, Date end, Integer minimumDurationInMS, List<Calendar> calendars) {
+	public List<Date[]> findSharedSlot(Date start, Date end, Integer minimumDurationInMS, List<Calendar> calendars) {
 		timelines = calendars.stream().map(c -> c.getComponents().iterator()).collect(Collectors.toList());
 		List<VEvent> eventsPointer = timelines.stream().map(t -> (VEvent) t.next()).collect(Collectors.toList());
 
