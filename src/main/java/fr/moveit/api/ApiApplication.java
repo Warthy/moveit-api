@@ -1,7 +1,6 @@
 package fr.moveit.api;
 
 import fr.moveit.api.configuration.Roles;
-import fr.moveit.api.controller.SecurityController;
 import fr.moveit.api.entity.Role;
 import fr.moveit.api.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,6 @@ import org.springframework.context.annotation.Bean;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @SpringBootApplication
 @RequiredArgsConstructor

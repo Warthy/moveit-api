@@ -3,7 +3,6 @@ package fr.moveit.api.controller;
 import fr.moveit.api.dto.ActivityCreationDTO;
 import fr.moveit.api.dto.ActivityEditionDTO;
 import fr.moveit.api.entity.Activity;
-import fr.moveit.api.security.SecurityUtils;
 import fr.moveit.api.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

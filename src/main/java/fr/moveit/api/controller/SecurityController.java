@@ -3,7 +3,6 @@ package fr.moveit.api.controller;
 import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.AuthentificationDTO;
 import fr.moveit.api.dto.UserCreationDTO;
-import fr.moveit.api.entity.User;
 import fr.moveit.api.security.jwt.JWTPayload;
 import fr.moveit.api.security.jwt.JWTProvider;
 import fr.moveit.api.service.UserService;
