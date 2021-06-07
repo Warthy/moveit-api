@@ -35,5 +35,6 @@ public final class SecurityUtils {
 				.stream()
 				.map(GrantedAuthority::getAuthority).anyMatch(a -> a.equals(authority));
 	}
+
 }
 

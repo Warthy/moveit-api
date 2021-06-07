@@ -2,7 +2,7 @@ package fr.moveit.api.dto;
 import lombok.Data;
 
 @Data
-public class UserModification {
+public class UserModificationDTO {
 
 	private String description;
 }

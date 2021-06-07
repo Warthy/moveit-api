@@ -1,10 +1,12 @@
 package fr.moveit.api.service;
 
 import fr.moveit.api.configuration.Roles;
+import fr.moveit.api.dto.PasswordChangeDTO;
 import fr.moveit.api.dto.UserCreationDTO;
-import fr.moveit.api.dto.UserModification;
+import fr.moveit.api.dto.UserModificationDTO;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.exceptions.BadRequestException;
+import fr.moveit.api.exceptions.ForbiddenException;
 import fr.moveit.api.repository.RoleRepository;
 import fr.moveit.api.repository.UserRepository;
 import fr.moveit.api.security.SecurityUtils;
@@ -60,7 +62,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-	public void editUser(User user, UserModification dto){
+	public void editUser(User user, UserModificationDTO dto){
 		mapper.map(dto, user);
 
 		repository.save(user);
@@ -87,6 +89,17 @@ public class UserService implements UserDetailsService {
 
 		user.getFriends().remove(target);
 
+		repository.save(user);
+	}
+
+	public void changePassword(User user, PasswordChangeDTO dto){
+		if(!user.getPassword().equals(passwordEncoder.encode(dto.getCurrentPassword())))
+			throw new ForbiddenException("invalid password");
+
+		if(!dto.getNewPassword().equals(dto.getConfirmNewPassword()))
+			throw new BadRequestException("password and password confirmation are different");
+
+		user.setPassword(passwordEncoder.encode(dto.getCurrentPassword()));
 		repository.save(user);
 	}
 }
