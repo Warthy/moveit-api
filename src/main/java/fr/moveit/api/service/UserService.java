@@ -31,6 +31,8 @@ public class UserService implements UserDetailsService {
 
 	final private PasswordEncoder passwordEncoder;
 
+	final private InterestService interestService;
+
 
 	@Override
 	public User loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -91,6 +93,21 @@ public class UserService implements UserDetailsService {
 
 		repository.save(user);
 	}
+
+	public void addInterest(Long id){
+		User user = getCurrentUser();
+		user.getInterests().add(interestService.getInterest(id));
+
+		repository.save(user);
+	}
+
+	public void removeInterest(Long id){
+		User user = getCurrentUser();
+		user.getInterests().remove(interestService.getInterest(id));
+
+		repository.save(user);
+	}
+
 
 	public void changePassword(User user, PasswordChangeDTO dto){
 		if(!user.getPassword().equals(passwordEncoder.encode(dto.getCurrentPassword())))

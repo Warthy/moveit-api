@@ -26,6 +26,7 @@ import java.util.Optional;
 public class ActivityService {
 
 	private final UserService userService;
+	private final InterestService interestService;
 	private final ModelMapper mapper;
 	private final ActivityRepository repository;
 
@@ -49,6 +50,7 @@ public class ActivityService {
 
 		activity.setParticipants(new HashSet<>());
 		activity.setCreatedAt(new Date());
+		activity.setInterest(interestService.getInterest(dto.getInterest()));
 		activity.setAuthor(userService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
 
 		dto.getParticipants().forEach(id -> activity.getParticipants().add(userService.getUser(id)));
@@ -67,7 +69,10 @@ public class ActivityService {
 
 	public Activity updateActivity(Long id, ActivityEditionDTO dto) {
 		Activity activity = getActivityIfHasPermissions(id);
+
 		mapper.map(dto, activity);
+		if(dto.getInterest() != null)
+			activity.setInterest(interestService.getInterest(dto.getInterest()));
 
 		return repository.save(activity);
 	}

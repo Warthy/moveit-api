@@ -16,6 +16,8 @@ public class ActivityEditionDTO {
 
 	private String description;
 
+	private Long interest;
+
 	private String location;
 	private Float price;
 }

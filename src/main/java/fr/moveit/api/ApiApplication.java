@@ -1,7 +1,10 @@
 package fr.moveit.api;
 
 import fr.moveit.api.configuration.Roles;
+import fr.moveit.api.entity.Interest;
+import fr.moveit.api.entity.InterestType;
 import fr.moveit.api.entity.Role;
+import fr.moveit.api.repository.InterestRepository;
 import fr.moveit.api.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +26,8 @@ public class ApiApplication implements CommandLineRunner {
 	final private Logger log = LoggerFactory.getLogger(ApiApplication.class);
 
 	final private RoleRepository roleRepository;
+
+	final private InterestRepository interestRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
@@ -46,5 +51,15 @@ public class ApiApplication implements CommandLineRunner {
 			}
 		}
 		roleRepository.saveAll(roles);
+
+		Interest unknown = new Interest();
+		unknown.setName("unknown");
+		unknown.setType(InterestType.OTHER);
+
+		interestRepository.save(unknown);
+
 	}
+
+
+
 }

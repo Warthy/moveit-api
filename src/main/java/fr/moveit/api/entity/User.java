@@ -1,7 +1,6 @@
 package fr.moveit.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,13 +40,17 @@ public class User implements UserDetails {
 
 	private String lastName;
 
-	@OneToMany(mappedBy = "owner")
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JsonIgnore
+	private Set<Interest> interests;
+
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
 	@JsonIgnore
 	private Collection<Planning> plannings;
 
 	@ManyToMany
 	@JsonIgnore
-	private Collection<User> friends;
+	private Set<User> friends;
 
 	@Override
 	@JsonIgnore

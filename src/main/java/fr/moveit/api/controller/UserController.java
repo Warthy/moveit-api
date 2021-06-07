@@ -17,18 +17,28 @@ public class UserController {
 		return userService.getCurrentUser();
 	}
 
-	@PostMapping("/friend")
-	public void addFriend(@RequestParam  Long id) {
-		userService.addFriend(id);
-	}
-
 	@PostMapping("/edit")
 	public void editOwnInformation(@RequestBody UserModificationDTO body) {
 		userService.editUser(userService.getCurrentUser(), body);
 	}
 
+	@PostMapping("/friend")
+	public void addFriend(@RequestParam Long id) {
+		userService.addFriend(id);
+	}
+
 	@DeleteMapping("/friend")
-	public void removeFriend(@RequestParam  Long id) {
+	public void removeFriend(@RequestParam Long id) {
 		userService.removeFriend(id);
+	}
+
+	@PostMapping("/interest")
+	public void addInterest(@RequestParam  Long id) {
+		userService.addInterest(id);
+	}
+
+	@DeleteMapping("/interest")
+	public void removeInterest(@RequestParam  Long id) {
+		userService.removeInterest(id);
 	}
 }

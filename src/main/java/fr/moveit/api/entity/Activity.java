@@ -19,6 +19,9 @@ public class Activity {
 
 	private Date createdAt;
 
+	@ManyToOne
+	private Interest interest;
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	private User author;
 
