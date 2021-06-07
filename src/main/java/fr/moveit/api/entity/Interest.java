@@ -19,7 +19,7 @@ public class Interest {
 	private InterestType type;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "interest")
+	@ManyToMany(mappedBy = "interests")
 	private Collection<User> users;
 
 }

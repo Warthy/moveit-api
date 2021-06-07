@@ -27,7 +27,7 @@ public class InterestController {
 		return interestService.getAll();
 	}
 
-	@GetMapping
+	@GetMapping("/me")
 	public Iterable<Interest> getUserInterests(){
 		return interestService.getUserInterests(userService.getCurrentUser());
 	}
