@@ -1,5 +1,6 @@
 package fr.moveit.api.controller;
 
+import fr.moveit.api.dto.UserModification;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,11 @@ public class UserController {
 	@PostMapping("/friend")
 	public void addFriend(@RequestParam  Long id) {
 		userService.addFriend(id);
+	}
+
+	@PostMapping("/edit")
+	public void editOwnInformation(@RequestBody UserModification body) {
+		userService.editUser(userService.getCurrentUser(), body);
 	}
 
 	@DeleteMapping("/friend")

@@ -2,6 +2,7 @@ package fr.moveit.api.service;
 
 import fr.moveit.api.configuration.Roles;
 import fr.moveit.api.dto.UserCreationDTO;
+import fr.moveit.api.dto.UserModification;
 import fr.moveit.api.entity.User;
 import fr.moveit.api.exceptions.BadRequestException;
 import fr.moveit.api.repository.RoleRepository;
@@ -24,7 +25,7 @@ public class UserService implements UserDetailsService {
 
 	final private RoleRepository roleRepository;
 
-	final private ModelMapper modelMapper;
+	final private ModelMapper mapper;
 
 	final private PasswordEncoder passwordEncoder;
 
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User createUser(UserCreationDTO dto){
-		User user = modelMapper.map(dto, User.class);
+		User user = mapper.map(dto, User.class);
 
 		if (!repository.existsByUsername(user.getUsername())) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,6 +58,12 @@ public class UserService implements UserDetailsService {
 		} else {
 			throw new RuntimeException("Username is already in use");
 		}
+	}
+
+	public void editUser(User user, UserModification dto){
+		mapper.map(dto, user);
+
+		repository.save(user);
 	}
 
 	public void addFriend(Long id){

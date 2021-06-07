@@ -31,6 +31,9 @@ public class User implements UserDetails {
 	@Column(unique = true, nullable = false)
 	private String email;
 
+	@Column(length = 500)
+	private String description;
+
 	@JsonIgnore
 	private Date deletedAt;
 
