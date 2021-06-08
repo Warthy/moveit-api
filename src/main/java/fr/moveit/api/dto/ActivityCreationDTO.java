@@ -20,7 +20,7 @@ public class ActivityCreationDTO {
 	private String location;
 	private Float price;
 
-	private Long interest = 0L; // id 0 should be unknown interest
+	private Long interest;
 
 	private Set<Long> participants = new HashSet<>();
 }

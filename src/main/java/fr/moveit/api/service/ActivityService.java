@@ -50,8 +50,9 @@ public class ActivityService {
 
 		activity.setParticipants(new HashSet<>());
 		activity.setCreatedAt(new Date());
-		activity.setInterest(interestService.getInterest(dto.getInterest()));
-		activity.setAuthor(userService.loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername()));
+
+		activity.setInterest(dto.getInterest() != null ? interestService.getInterest(dto.getInterest()): interestService.getUnknownInterest());
+		activity.setAuthor(userService.getCurrentUser());
 
 		dto.getParticipants().forEach(id -> activity.getParticipants().add(userService.getUser(id)));
 

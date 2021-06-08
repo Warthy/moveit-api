@@ -52,14 +52,15 @@ public class ApiApplication implements CommandLineRunner {
 		}
 		roleRepository.saveAll(roles);
 
-		Interest unknown = new Interest();
-		unknown.setName("unknown");
-		unknown.setType(InterestType.OTHER);
+		Interest unknown = interestRepository.getUnknownInterest();
+		if (unknown == null) {
+			unknown = new Interest();
+			unknown.setName("unknown");
+			unknown.setType(InterestType.OTHER);
 
-		interestRepository.save(unknown);
-
+			interestRepository.save(unknown);
+		}
 	}
-
 
 
 }

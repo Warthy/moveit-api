@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/activity")
 public class ActivityController {
-	final ActivityService activityService;
+	final private ActivityService activityService;
 
 	@GetMapping
 	public Iterable<Activity> getAll(){
@@ -24,7 +24,6 @@ public class ActivityController {
 	public Activity create(@RequestBody ActivityCreationDTO body) {
 		return activityService.createActivity(body);
 	}
-
 	@PutMapping("/{id}")
 	public Activity update(@PathVariable Long id, ActivityEditionDTO body) {
 		return activityService.updateActivity(id, body);

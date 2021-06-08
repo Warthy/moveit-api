@@ -25,7 +25,7 @@ public class Activity {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private User author;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<User> participants;
 
 	@Enumerated(EnumType.STRING)

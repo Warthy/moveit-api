@@ -22,7 +22,7 @@ public class InterestService {
 	private final ActivityRepository activityRepository;
 	private final UserRepository userRepository;
 
-	private Interest getUnknownInterest(){
+	public Interest getUnknownInterest(){
 		return repository.getUnknownInterest();
 	}
 
