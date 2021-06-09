@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 	private final UserService userService;
 
+	@GetMapping Iterable<User> getAll(){
+		return userService.getAll();
+	}
+
+
 	@GetMapping("/me")
 	public User getCurrentUser(){
 		return userService.getCurrentUser();

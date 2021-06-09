@@ -39,6 +39,10 @@ public class UserService implements UserDetailsService {
 		return repository.findByUsernameAndDeletedAtIsNull(s).orElseThrow();
 	}
 
+	public Iterable<User> getAll(){
+		return repository.findAll();
+	}
+
 	public User getCurrentUser(){
 		return loadUserByUsername(SecurityUtils.getCurrentUserLogin().getUsername());
 	}
