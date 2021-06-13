@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +18,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PlanningService {
-	PlanningRepository repository;
+	private final PlanningRepository repository;
 
-	UserService userService;
+	private final UserService userService;
 
 	public Planning getPlanning(Long id) {
 		Optional<Planning> planning = repository.findById(id);

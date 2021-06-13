@@ -31,7 +31,7 @@ public class JWTProvider {
 	private String secretKey;
 
 	@Value("${security.jwt.token-validity-in-seconds}")
-	private final long tokenValidityInMilliseconds = 86400;
+	private final long tokenValidityInMilliseconds = 8640000;
 
 	@Value("${security.jwt.token-validity-in-seconds-for-remember-me}")
 	private final long tokenValidityInMillisecondsForRememberMe = 2592000;
