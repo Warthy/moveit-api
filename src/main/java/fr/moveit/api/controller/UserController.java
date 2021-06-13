@@ -31,6 +31,11 @@ public class UserController {
 		userService.editUser(userService.getCurrentUser(), body);
 	}
 
+	@GetMapping("/friend")
+	public Iterable<User> getOwnFriends(){
+		return userService.getCurrentUser().getFriends();
+	}
+
 	@PostMapping("/friend")
 	public void addFriend(@RequestParam Long id) {
 		userService.addFriend(id);
