@@ -35,10 +35,11 @@ public class SecurityController {
 
 	final private JWTProvider tokenProvider;
 
+
 	@PostMapping("/login")
-	public JWTPayload login(@RequestBody AuthentificationDTO credentials) {
-		String username = credentials.getUsername();
-		String password = credentials.getPassword();
+	public JWTPayload login(@RequestBody AuthentificationDTO body) {
+		String username = body.getUsername();
+		String password = body.getPassword();
 
 		try {
 			String token = tokenProvider.createToken(
@@ -47,7 +48,7 @@ public class SecurityController {
 							password,
 							userService.loadUserByUsername(username).getRoles()
 					)),
-					credentials.getRememberMe()
+					body.getRememberMe()
 			);
 
 			return new JWTPayload(token, "");

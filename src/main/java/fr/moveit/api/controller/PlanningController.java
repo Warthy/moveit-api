@@ -5,9 +5,12 @@ import fr.moveit.api.dto.PlanningIntersectionDTO;
 import fr.moveit.api.entity.Planning;
 import fr.moveit.api.service.PlanningService;
 import lombok.RequiredArgsConstructor;
+import net.fortuna.ical4j.model.Date;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,8 +33,8 @@ public class PlanningController {
 		planningService.removePlanning(id);
 	}
 
-	@GetMapping("/intersection")
-	public String getIntersection(@RequestBody PlanningIntersectionDTO dto){
+	@PostMapping("/intersection")
+	public List<Date[]> getIntersection(@RequestBody PlanningIntersectionDTO dto) throws ParseException {
 		return planningService.intersection(dto);
 	}
 }
