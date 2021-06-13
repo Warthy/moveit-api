@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -58,6 +59,7 @@ public class UserService implements UserDetailsService {
 	public User createUser(UserCreationDTO dto){
 		User user = mapper.map(dto, User.class);
 
+		user.setInterests(new HashSet<>());
 		dto.getInterests().forEach(id -> {
 			user.getInterests().add(interestService.getInterest(id));
 		});
