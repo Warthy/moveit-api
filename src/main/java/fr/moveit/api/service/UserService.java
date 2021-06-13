@@ -58,6 +58,10 @@ public class UserService implements UserDetailsService {
 	public User createUser(UserCreationDTO dto){
 		User user = mapper.map(dto, User.class);
 
+		dto.getInterests().forEach(id -> {
+			user.getInterests().add(interestService.getInterest(id));
+		});
+
 		if (!repository.existsByUsername(user.getUsername())) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRoles(Collections.singleton(roleRepository.findByRole(Roles.USER)));
