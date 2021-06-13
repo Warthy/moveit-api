@@ -2,6 +2,7 @@ package fr.moveit.api.dto;
 
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -18,5 +19,5 @@ public class UserCreationDTO {
 
 	private String description;
 
-	private Set<Long> interests;
+	private Set<Long> interests = new HashSet<>();
 }
